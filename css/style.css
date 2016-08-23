@@ -541,3 +541,9 @@ Main Components
 ol, ul {
   list-style: none;
 }
+
+.avatar {
+  width: 200px;
+  float: left;
+  margin-right: 20px;
+}
