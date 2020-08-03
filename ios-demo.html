@@ -11,9 +11,7 @@
 
   const constraints = {
     video: {
-      facingMode: {
-        exact: 'environment'
-      }
+      facingMode: 'environment'
     }
   };
 
@@ -42,9 +40,11 @@
   else {
     navigator.mediaDevices.enumerateDevices().then(function (devices) {
       var m = devices.map(function (device) {
+        console.log(device)
         return device.kind + ": " + device.label + " id = " + device.deviceId
       }).join('<br>')
       log(m);
+      capture(constraints)
     }).catch(function (err) {
       log(err.name + ": " + err.message);
       capture({})
