@@ -1,0 +1,46 @@
+<video id="player" autoplay muted playsinline> </video>
+<button id="capture">Capture</button>
+<canvas id="canvas" width=320 height=240></canvas>
+<script>
+  const player = document.getElementById('player');
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+  const captureButton = document.getElementById('capture');
+
+  const constraints = {
+    video: {
+      facingMode: {
+        exact: 'environment'
+      }
+    }
+  };
+
+  captureButton.addEventListener('click', () => {
+    // Draw the video frame to the canvas.
+    context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  });
+
+  const capture = function (constraints) {
+    // Attach the video stream to the video element and autoplay.
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then((stream) => {
+        player.srcObject = stream;
+      });
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    capture({})
+    console.log("enumerateDevices() not supported. not using any constraints.");
+  }
+  else {
+    navigator.mediaDevices.enumerateDevices().then(function (devices) {
+      devices.forEach(function (device) {
+        console.log(device.kind + ": " + device.label +
+          " id = " + device.deviceId);
+      });
+    }).catch(function (err) {
+      console.log(err.name + ": " + err.message);
+      capture({})
+    });
+  }
+</script>
