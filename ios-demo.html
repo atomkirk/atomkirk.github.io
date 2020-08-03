@@ -6,7 +6,7 @@
   const player = document.getElementById('player');
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext('2d');
-  const message = document.getElementById('message');
+  const messageDiv = document.getElementById('message');
   const captureButton = document.getElementById('capture');
 
   const constraints = {
@@ -16,6 +16,11 @@
       }
     }
   };
+
+  const log = message => {
+    console.log(message);
+    messageDiv.innerHTML = message;
+  }
 
   captureButton.addEventListener('click', () => {
     // Draw the video frame to the canvas.
@@ -32,18 +37,16 @@
 
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
     capture({})
-    console.log("enumerateDevices() not supported. not using any constraints.");
+    log("enumerateDevices() not supported. not using any constraints.");
   }
   else {
     navigator.mediaDevices.enumerateDevices().then(function (devices) {
-      devices.forEach(function (device) {
-        var m = device.kind + ": " + device.label + " id = " + device.deviceId
-        console.log(m);
-        message.innerHTML = m;
-        alert(m);
-      })
+      var m = devices.map(function (device) {
+        return device.kind + ": " + device.label + " id = " + device.deviceId
+      }).join('<br>')
+      log(m);
     }).catch(function (err) {
-      console.log(err.name + ": " + err.message);
+      log(err.name + ": " + err.message);
       capture({})
     });
   }
